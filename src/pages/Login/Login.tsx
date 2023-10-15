@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, FormEvent, FormEventHandler } from "react";
 
 import { Button, FormControlLabel, Checkbox } from "@mui/material";
 
@@ -6,6 +6,29 @@ import reactLogo from "../../assets/logo.svg";
 import TextInput from "../../components/TextInput/TextInput";
 
 function Login() {
+  const [formData, setFormData] = useState({
+    email: "",
+    senha: "",
+    lembrar: false,
+  });
+
+  function handleFormOnChange(event: FormEvent) {
+    const { name, value, type, checked } = event.target as HTMLInputElement;
+
+    setFormData(prev => ({
+        ...prev,
+        [name]: type !== "checkbox" ? value : checked
+    }));
+  }
+
+  const handleFormSubmit: FormEventHandler<HTMLFormElement> = (event) => {
+    event.preventDefault();
+    
+    console.log(`Email: ${formData.email}`);
+    console.log(`Senha: ${formData.senha}`);
+    console.log(`Lembrar: ${formData.lembrar}`);
+  }
+
   return (
     <>
       <div
@@ -18,7 +41,6 @@ function Login() {
         }}
       >
         <img src={reactLogo} />
-
       </div>
 
       <form
@@ -30,9 +52,26 @@ function Login() {
           flexDirection: "column",
           gap: "16px"
         }}
+        onSubmit={handleFormSubmit}
       >
-        <TextInput label="Email" placeholder="Digite seu email" type="email" />
-        <TextInput label="Senha" placeholder="Digite sua senha" type="password" />
+        <TextInput
+          label="Email"
+          placeholder="Digite seu email"
+          type="email"
+          name="email"
+          value={formData.email}
+          required={true}
+          handleOnChange={handleFormOnChange}
+        />
+        <TextInput
+          label="Senha"
+          placeholder="Digite sua senha"
+          type="password"
+          name="senha"
+          value={formData.senha}
+          required={true}
+          handleOnChange={handleFormOnChange}
+        />
 
         <div
           style={{
@@ -61,11 +100,14 @@ function Login() {
                   },
                 }} />}
               label="Lembrar-me"
-            />                                      {/* A tag <a> provavelmente irá virar um link do router */}
+              name="lembrar"
+              onChange={handleFormOnChange}
+              value={formData.lembrar}
+            />
+            
+            {/* A tag <a> provavelmente irá virar um link do router */}
             <a style={{ color: "#FB344F", cursor: "pointer" }}>Esqueceu a senha</a>
-
           </div>
-
         </div>
 
         <Button
@@ -79,11 +121,11 @@ function Login() {
             textTransform: "capitalize",
             font: "500 17px Roboto"
           }}
+          type="submit"
         >
           Entrar
         </Button>
       </form>
-
 
       <div
         style={{

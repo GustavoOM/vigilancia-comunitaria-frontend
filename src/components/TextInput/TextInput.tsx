@@ -54,6 +54,7 @@ function TextInput(props: TextInputProps) {
             <IconButton
               aria-label="toggle password visibility"
               onClick={() => setShowPassword(prev => !prev)}
+              onMouseDown={() => setShowPassword(prev => !prev)}
               edge="end"
             >
               {showPassword ? <VisibilityOff /> : <Visibility />}

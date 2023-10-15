@@ -41,7 +41,6 @@ function Cadastro() {
         }}
         >
         <img src={reactLogo}/>
-
       </div>
 
       <form
