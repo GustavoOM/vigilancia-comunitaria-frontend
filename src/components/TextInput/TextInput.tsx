@@ -1,7 +1,8 @@
-import { FormHelperText, IconButton, InputAdornment, OutlinedInput } from "@mui/material";
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { FormEvent, useState } from "react";
+
+import { FormHelperText, IconButton, InputAdornment, OutlinedInput } from "@mui/material";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 type TextInputProps = {
   label: string,

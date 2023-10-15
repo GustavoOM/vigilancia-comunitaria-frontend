@@ -1,7 +1,9 @@
-import { Button } from '@mui/material';
-import reactLogo from '../../assets/logo.svg';
-import TextInput from '../../components/TextInput/TextInput';
-import { FormEvent, FormEventHandler, useState } from 'react';
+import { FormEvent, FormEventHandler, useState } from "react";
+
+import reactLogo from "../../assets/logo.svg";
+import TextInput from "../../components/TextInput/TextInput";
+
+import { Button } from "@mui/material";
 
 function Cadastro() {
   const [formData, setFormData] = useState({
