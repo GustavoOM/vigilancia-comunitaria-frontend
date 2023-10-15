@@ -1,12 +1,16 @@
 import { FormHelperText, IconButton, InputAdornment, OutlinedInput } from "@mui/material";
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 
 type TextInputProps = {
   label: string,
   placeholder: string,
   type: string,
+  name: string,
+  value: string | boolean,
+  required: boolean,
+  handleOnChange: (event: FormEvent) => void,
 }
 
 function TextInput(props: TextInputProps) {
@@ -25,13 +29,17 @@ function TextInput(props: TextInputProps) {
       </FormHelperText>
 
       <OutlinedInput
+        name={props.name}
+        value={props.value}
+        onChange={props.handleOnChange}
         type={
           props.type !== "password"
             ? props.type
             : showPassword === true
               ? "text"
-              : "password" 
+              : "password"
         }
+        required={props.required}
         placeholder={props.placeholder}
         style={{
           minWidth: "360px",

@@ -1,8 +1,32 @@
 import { Button } from '@mui/material';
 import reactLogo from '../../assets/logo.svg';
 import TextInput from '../../components/TextInput/TextInput';
+import { FormEvent, FormEventHandler, useState } from 'react';
 
 function Cadastro() {
+  const [formData, setFormData] = useState({
+    usuario: "",
+    email: "",
+    senha: "",
+  });
+
+  function handleFormOnChange(event: FormEvent) {
+    const { name, value, type, checked } = event.target as HTMLInputElement;
+
+    setFormData(prev => ({
+        ...prev,
+        [name]: type !== "checkbox" ? value : checked
+    }));
+  }
+
+  const handleFormSubmit: FormEventHandler<HTMLFormElement> = (event) => {
+    event.preventDefault();
+    
+    console.log(`Usuário: ${formData.usuario}`);
+    console.log(`Email: ${formData.email}`);
+    console.log(`Senha: ${formData.senha}`);
+  }
+
   return (
     <>
       <div
@@ -27,10 +51,35 @@ function Cadastro() {
           flexDirection: "column",
           gap: "16px"
         }}
+        onSubmit={handleFormSubmit}
       >
-        <TextInput label="Usuário" placeholder="Digite seu nome de usuário" type="text" />
-        <TextInput label="Email" placeholder="Digite seu email" type="email" />
-        <TextInput label="Senha" placeholder="Digite sua senha" type="password" />
+        <TextInput
+          label="Usuário"
+          placeholder="Digite seu nome de usuário"
+          type="text"
+          name="usuario"
+          value={formData.usuario}
+          required={true}
+          handleOnChange={handleFormOnChange}
+        />
+        <TextInput
+          label="Email"
+          placeholder="Digite seu email"
+          type="email"
+          name="email"
+          value={formData.email}
+          required={true}
+          handleOnChange={handleFormOnChange}
+        />
+        <TextInput
+          label="Senha"
+          placeholder="Digite sua senha"
+          type="password"
+          name="senha"
+          value={formData.senha}
+          required={true}
+          handleOnChange={handleFormOnChange}
+        />
 
         <Button
           size="large"
@@ -43,6 +92,7 @@ function Cadastro() {
             textTransform: "capitalize",
             font: "500 17px Roboto"
           }}
+          type="submit"
         >
           Cadastrar
         </Button>
@@ -57,7 +107,7 @@ function Cadastro() {
         }}
       >
         {/* A tag <a> provavelmente irá virar um link do router */}
-        <p style={{}}>Já possui uma conta? <a style={{color: "var(--roxo600)", cursor: "pointer"}}>Login</a></p>
+        <p>Já possui uma conta? <a style={{color: "var(--roxo600)", cursor: "pointer"}}>Login</a></p>
       </div>
     </>
   )
