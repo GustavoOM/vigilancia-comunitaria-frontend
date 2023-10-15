@@ -1,10 +1,11 @@
-import ComponenteExemplo from "./components/ComponenteExemplo/ComponenteExemplo"
+import "./App.css"
+
+import Cadastro from "./pages/Cadastro/Cadastro"
 
 function App() {
   return (
     <>
-      <h1>Vigilância Comunitária</h1>
-      <ComponenteExemplo />
+      <Cadastro />
     </>
   )
 }
