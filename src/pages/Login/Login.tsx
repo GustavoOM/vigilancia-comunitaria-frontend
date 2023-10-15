@@ -87,8 +87,6 @@ function Login() {
               justifyContent: "space-between",
               minWidth: "360px",
               font: "500 15px Roboto",
-
-
             }}
           >
             <FormControlLabel
@@ -102,7 +100,7 @@ function Login() {
               label="Lembrar-me"
               name="lembrar"
               onChange={handleFormOnChange}
-              value={formData.lembrar}
+              checked={formData.lembrar}
             />
             
             {/* A tag <a> provavelmente irá virar um link do router */}
