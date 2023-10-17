@@ -16,14 +16,14 @@ function Login() {
     const { name, value, type, checked } = event.target as HTMLInputElement;
 
     setFormData(prev => ({
-        ...prev,
-        [name]: type !== "checkbox" ? value : checked
+      ...prev,
+      [name]: type !== "checkbox" ? value : checked
     }));
   }
 
   const handleFormSubmit: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
-    
+
     console.log(`Email: ${formData.email}`);
     console.log(`Senha: ${formData.senha}`);
     console.log(`Lembrar: ${formData.lembrar}`);
@@ -84,7 +84,6 @@ function Login() {
             style={{
               display: "flex",
               alignItems: "center",
-              justifyContent: "space-between",
               minWidth: "360px",
               font: "500 15px Roboto",
             }}
@@ -102,9 +101,7 @@ function Login() {
               onChange={handleFormOnChange}
               checked={formData.lembrar}
             />
-            
-            {/* A tag <a> provavelmente irá virar um link do router */}
-            <a style={{ color: "#FB344F", cursor: "pointer" }}>Esqueceu a senha</a>
+
           </div>
         </div>
 
