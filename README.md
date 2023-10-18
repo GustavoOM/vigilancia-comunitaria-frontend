@@ -8,4 +8,7 @@ Com [node e npm](https://nodejs.org/en) e instalados, na pasta raíz do projeto,
 npm install
 npm run dev
 ```
-O servidor será aberto na porta 5173: [http://localhost:5173/](http://localhost:5173/).
+Como na imagem abaixo, será indicada a porta em que o servidor será aberto.
+
+![image](https://github.com/GustavoOM/vigilancia-comunitaria-frontend/assets/53827143/63baec04-6035-4656-b32b-f9027e29616b)
+
