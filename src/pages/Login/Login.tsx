@@ -1,6 +1,6 @@
 import { Button, Checkbox, FormControlLabel } from "@mui/material";
 import { FormEvent, FormEventHandler, useState } from "react";
-import { useNavigation } from "react-router";
+import { useNavigate } from "react-router-dom";
 import reactLogo from "../../assets/logo.svg";
 import TextInput from "../../components/TextInput/TextInput";
 function Login() {
@@ -9,6 +9,7 @@ function Login() {
     senha: "",
     lembrar: false,
   });
+  const navigate = useNavigate();
 
   function handleFormOnChange(event: FormEvent) {
     const { name, value, type, checked } = event.target as HTMLInputElement;
@@ -18,7 +19,6 @@ function Login() {
       [name]: type !== "checkbox" ? value : checked,
     }));
   }
-  const history = useNavigation();
 
   const handleFormSubmit: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
@@ -28,7 +28,7 @@ function Login() {
     console.log(`Lembrar: ${formData.lembrar}`);
 
     // redirect to /feed
-    history.location.push("/feed");
+    navigate("/feed");
   };
 
   return (
