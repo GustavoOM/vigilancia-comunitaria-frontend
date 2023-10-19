@@ -48,7 +48,7 @@ function Login() {
         style={{
           display: "flex",
           alignItems: "center",
-          marginTop: "112px",
+          marginTop: "80px",
           flexDirection: "column",
           gap: "16px"
         }}

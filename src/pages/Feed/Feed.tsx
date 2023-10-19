@@ -1,4 +1,6 @@
 import Postagem from "../../components/Postagem/Postagem";
+import Header from "../../components/Header/Header";
+import Footer from "../../components/Footer/Footer";
 import { Stack } from "@mui/material"
 
 function ComponenteExemplo() {
@@ -9,7 +11,9 @@ function ComponenteExemplo() {
     ]
 
     return (
+        
         <Stack justifyContent="center" alignItems="center" spacing={1}>
+            <Header/>
             {postagens.map((postagem, index) => (
                 <Postagem
                     key={index}
@@ -20,6 +24,7 @@ function ComponenteExemplo() {
                     urlImagem={postagem.urlImagem}
                 />
             ))}
+            <Footer/>
         </Stack>
     )
 }
