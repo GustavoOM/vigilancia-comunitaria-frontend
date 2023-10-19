@@ -15,32 +15,32 @@ function Cadastro() {
   function handleFormOnChange(event: FormEvent) {
     const { name, value, type, checked } = event.target as HTMLInputElement;
 
-    setFormData(prev => ({
-        ...prev,
-        [name]: type !== "checkbox" ? value : checked
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type !== "checkbox" ? value : checked,
     }));
   }
 
   const handleFormSubmit: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
-    
+
     console.log(`Usuário: ${formData.usuario}`);
     console.log(`Email: ${formData.email}`);
     console.log(`Senha: ${formData.senha}`);
-  }
+  };
 
   return (
     <>
       <div
-        className='LogoContainer'
+        className="LogoContainer"
         style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           paddingTop: "80px",
         }}
-        >
-        <img src={reactLogo}/>
+      >
+        <img src={reactLogo} />
       </div>
 
       <form
@@ -50,7 +50,7 @@ function Cadastro() {
           alignItems: "center",
           marginTop: "80px",
           flexDirection: "column",
-          gap: "16px"
+          gap: "16px",
         }}
         onSubmit={handleFormSubmit}
       >
@@ -91,7 +91,7 @@ function Cadastro() {
             minHeight: "45px",
             marginTop: "32px",
             textTransform: "capitalize",
-            font: "500 17px Roboto"
+            font: "500 17px Roboto",
           }}
           type="submit"
         >
@@ -104,14 +104,22 @@ function Cadastro() {
           font: "500 15px Roboto",
           color: "var(--cinzaEscuro)",
           textAlign: "center",
-          marginTop: "40px"
+          marginTop: "40px",
         }}
       >
         {/* A tag <a> provavelmente irá virar um link do router */}
-        <p>Já possui uma conta? <a style={{color: "var(--roxo600)", cursor: "pointer"}}>Login</a></p>
+        <p>
+          Já possui uma conta?{" "}
+          <a
+            style={{ color: "var(--roxo600)", cursor: "pointer" }}
+            href={"/login"}
+          >
+            Login
+          </a>
+        </p>
       </div>
     </>
-  )
+  );
 }
 
 export default Cadastro;
