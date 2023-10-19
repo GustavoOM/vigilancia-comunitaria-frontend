@@ -1,10 +1,8 @@
-import { useState, FormEvent, FormEventHandler } from "react";
-
-import { Button, FormControlLabel, Checkbox } from "@mui/material";
-
+import { Button, Checkbox, FormControlLabel } from "@mui/material";
+import { FormEvent, FormEventHandler, useState } from "react";
+import { useNavigation } from "react-router";
 import reactLogo from "../../assets/logo.svg";
 import TextInput from "../../components/TextInput/TextInput";
-
 function Login() {
   const [formData, setFormData] = useState({
     email: "",
@@ -15,11 +13,12 @@ function Login() {
   function handleFormOnChange(event: FormEvent) {
     const { name, value, type, checked } = event.target as HTMLInputElement;
 
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type !== "checkbox" ? value : checked
+      [name]: type !== "checkbox" ? value : checked,
     }));
   }
+  const history = useNavigation();
 
   const handleFormSubmit: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
@@ -27,12 +26,15 @@ function Login() {
     console.log(`Email: ${formData.email}`);
     console.log(`Senha: ${formData.senha}`);
     console.log(`Lembrar: ${formData.lembrar}`);
-  }
+
+    // redirect to /feed
+    history.location.push("/feed");
+  };
 
   return (
     <>
       <div
-        className='LogoContainer'
+        className="LogoContainer"
         style={{
           display: "flex",
           alignItems: "center",
@@ -50,7 +52,7 @@ function Login() {
           alignItems: "center",
           marginTop: "80px",
           flexDirection: "column",
-          gap: "16px"
+          gap: "16px",
         }}
         onSubmit={handleFormSubmit}
       >
@@ -89,19 +91,22 @@ function Login() {
             }}
           >
             <FormControlLabel
-              control={<Checkbox value="remember"
-                sx={{
-                  color: "var(--roxo600)",
-                  '&.Mui-checked': {
-                    color: "var(--roxo500)",
-                  },
-                }} />}
+              control={
+                <Checkbox
+                  value="remember"
+                  sx={{
+                    color: "var(--roxo600)",
+                    "&.Mui-checked": {
+                      color: "var(--roxo500)",
+                    },
+                  }}
+                />
+              }
               label="Lembrar-me"
               name="lembrar"
               onChange={handleFormOnChange}
               checked={formData.lembrar}
             />
-
           </div>
         </div>
 
@@ -114,7 +119,7 @@ function Login() {
             minHeight: "45px",
             marginTop: "16px",
             textTransform: "capitalize",
-            font: "500 17px Roboto"
+            font: "500 17px Roboto",
           }}
           type="submit"
         >
@@ -127,14 +132,22 @@ function Login() {
           font: "500 15px Roboto",
           color: "var(--cinzaEscuro)",
           textAlign: "center",
-          marginTop: "40px"
+          marginTop: "40px",
         }}
       >
         {/* A tag <a> provavelmente irá virar um link do router */}
-        <p style={{}}>Não tem uma conta? <a style={{ color: "var(--roxo600)", cursor: "pointer" }}>Cadastre-se</a></p>
+        <p style={{}}>
+          Não tem uma conta?{" "}
+          <a
+            style={{ color: "var(--roxo600)", cursor: "pointer" }}
+            href={"/cadastro"}
+          >
+            Cadastre-se
+          </a>
+        </p>
       </div>
     </>
-  )
+  );
 }
 
 export default Login;
