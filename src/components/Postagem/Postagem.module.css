@@ -1,0 +1,9 @@
+.postagem {
+    width: "390px";
+    height: "332px";
+    background-color: brown;
+}
+
+.imagem {
+    max-width: "390px";
+}
