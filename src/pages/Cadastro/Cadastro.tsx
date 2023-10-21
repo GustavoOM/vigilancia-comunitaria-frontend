@@ -3,13 +3,19 @@ import { FormEvent, FormEventHandler, useState } from "react";
 import reactLogo from "../../assets/logo.svg";
 import TextInput from "../../components/TextInput/TextInput";
 
-import { Button } from "@mui/material";
+import { AlertColor, Button } from "@mui/material";
 
-function Cadastro() {
+import { useNavigate } from "react-router";
+
+type CadastroProps = {
+  setAlert: (alert: { message: string, severity: AlertColor | undefined }) => void,
+};
+
+function Cadastro(props: CadastroProps) {
   const [formData, setFormData] = useState({
-    usuario: "",
+    name: "",
     email: "",
-    senha: "",
+    password: "",
   });
 
   function handleFormOnChange(event: FormEvent) {
@@ -21,13 +27,58 @@ function Cadastro() {
     }));
   }
 
+  const navigate = useNavigate();
+
+  async function requestCadastro() {
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+
+    try {
+      const requestConfig = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      };
+
+      const response = await fetch(`${apiBaseUrl}/auth/signup`, requestConfig);
+      const data = await response.json();
+
+      if (data.code === "SUCESSO") {
+        props.setAlert({
+          message: "Usuário cadastrado com sucesso!",
+          severity: "success",
+        });
+        navigate("/login");
+      }
+      else {
+        // Posteriormente pode ser feito o tratamento para respostas diferentes da api (ex: pk duplicada).
+        props.setAlert({
+          message: "Erro ao realizar cadastro!",
+          severity: "error",
+        });
+
+        setFormData({ name: "", email: "", password: "" });
+      }
+    }
+    catch (error) {
+      props.setAlert({
+        message: "Erro ao realizar cadastro!",
+        severity: "error",
+      });
+
+      setFormData({ name: "", email: "", password: "" });
+
+      console.error(error);
+    }
+  }
+
   const handleFormSubmit: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
 
-    console.log(`Usuário: ${formData.usuario}`);
-    console.log(`Email: ${formData.email}`);
-    console.log(`Senha: ${formData.senha}`);
-  };
+    requestCadastro();
+
+  }
 
   return (
     <>
@@ -58,8 +109,8 @@ function Cadastro() {
           label="Usuário"
           placeholder="Digite seu nome de usuário"
           type="text"
-          name="usuario"
-          value={formData.usuario}
+          name="name"
+          value={formData.name}
           required={true}
           handleOnChange={handleFormOnChange}
         />
@@ -76,8 +127,8 @@ function Cadastro() {
           label="Senha"
           placeholder="Digite sua senha"
           type="password"
-          name="senha"
-          value={formData.senha}
+          name="password"
+          value={formData.password}
           required={true}
           handleOnChange={handleFormOnChange}
         />
