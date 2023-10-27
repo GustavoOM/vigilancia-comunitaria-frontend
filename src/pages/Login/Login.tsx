@@ -2,7 +2,7 @@ import { Button, Checkbox, FormControlLabel } from "@mui/material";
 import { FormEvent, FormEventHandler, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import reactLogo from "../../assets/logo.svg";
-import TextInput from "../../components/TextInput/TextInput";
+import Input from "../../components/Input/Input";
 function Login() {
   const [formData, setFormData] = useState({
     email: "",
@@ -56,7 +56,7 @@ function Login() {
         }}
         onSubmit={handleFormSubmit}
       >
-        <TextInput
+        <Input
           label="Email"
           placeholder="Digite seu email"
           type="email"
@@ -65,7 +65,7 @@ function Login() {
           required={true}
           handleOnChange={handleFormOnChange}
         />
-        <TextInput
+        <Input
           label="Senha"
           placeholder="Digite sua senha"
           type="password"

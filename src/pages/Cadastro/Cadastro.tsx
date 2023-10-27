@@ -1,7 +1,7 @@
 import { FormEvent, FormEventHandler, useState } from "react";
 
 import reactLogo from "../../assets/logo.svg";
-import TextInput from "../../components/TextInput/TextInput";
+import Input from "../../components/Input/Input";
 
 import { AlertColor, Button } from "@mui/material";
 
@@ -105,7 +105,7 @@ function Cadastro(props: CadastroProps) {
         }}
         onSubmit={handleFormSubmit}
       >
-        <TextInput
+        <Input
           label="Usuário"
           placeholder="Digite seu nome de usuário"
           type="text"
@@ -114,7 +114,7 @@ function Cadastro(props: CadastroProps) {
           required={true}
           handleOnChange={handleFormOnChange}
         />
-        <TextInput
+        <Input
           label="Email"
           placeholder="Digite seu email"
           type="email"
@@ -123,7 +123,7 @@ function Cadastro(props: CadastroProps) {
           required={true}
           handleOnChange={handleFormOnChange}
         />
-        <TextInput
+        <Input
           label="Senha"
           placeholder="Digite sua senha"
           type="password"

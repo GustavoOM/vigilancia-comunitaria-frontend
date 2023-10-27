@@ -4,7 +4,7 @@ import { FormHelperText, IconButton, InputAdornment, OutlinedInput } from "@mui/
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
-type TextInputProps = {
+type InputProps = {
   label: string,
   placeholder: string,
   type: string,
@@ -12,9 +12,11 @@ type TextInputProps = {
   value: string | boolean,
   required: boolean,
   handleOnChange: (event: FormEvent) => void,
+  rows?: number,
+  width?: string, 
 }
 
-function TextInput(props: TextInputProps) {
+function Input(props: InputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -43,7 +45,7 @@ function TextInput(props: TextInputProps) {
         required={props.required}
         placeholder={props.placeholder}
         style={{
-          minWidth: "360px",
+          minWidth: props.width ? props.width : "360px",
           fontWeight: "500",
           fontSize: "",
         }}
@@ -61,9 +63,11 @@ function TextInput(props: TextInputProps) {
             </IconButton>
           </InputAdornment>
         }
+        multiline={props.rows !== undefined}
+        rows={props.rows}
       />
     </div>
   )
 }
 
-export default TextInput;
+export default Input;
