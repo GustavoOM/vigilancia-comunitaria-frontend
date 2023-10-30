@@ -3,7 +3,12 @@ import { FormEvent, FormEventHandler, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import reactLogo from "../../assets/logo.svg";
 import Input from "../../components/Input/Input";
-function Login() {
+
+export type LoginProps = {
+  setAlert: (alert: { message: string; severity: string | undefined }) => void;
+};
+
+function Login(props: LoginProps) {
   const [formData, setFormData] = useState({
     email: "",
     senha: "",
@@ -20,15 +25,68 @@ function Login() {
     }));
   }
 
-  const handleFormSubmit: FormEventHandler<HTMLFormElement> = (event) => {
+  async function requestLogin() {
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+
+    const params = {
+      email: formData.email,
+      password: formData.senha,
+    };
+
+    try {
+      const requestConfig = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(params),
+      };
+
+      const response = await fetch(`${apiBaseUrl}/auth`, requestConfig);
+      const data = await response.json();
+
+      if (response.status !== 200) {
+        props.setAlert({
+          message: "Erro ao realizar login!",
+          severity: "error",
+        });
+        return;
+      }
+      console.log(data);
+
+      props.setAlert({
+        message: "Login realizado!",
+        severity: "success",
+      });
+
+      localStorage.setItem("vigilancia-token", data.token);
+
+      setTimeout(() => {
+        navigate("/feed");
+      }, 1000);
+    } catch (error) {
+      props.setAlert({
+        message: "Erro ao realizar login!",
+        severity: "error",
+      });
+
+      setFormData({ email: "", senha: "", lembrar: false });
+
+      console.error(error);
+    }
+  }
+
+  const handleFormSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
 
     console.log(`Email: ${formData.email}`);
     console.log(`Senha: ${formData.senha}`);
     console.log(`Lembrar: ${formData.lembrar}`);
 
+    await requestLogin();
+
     // redirect to /feed
-    navigate("/feed");
+    // navigate("/feed");
   };
 
   return (

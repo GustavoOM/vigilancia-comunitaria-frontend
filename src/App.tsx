@@ -1,19 +1,21 @@
-import "./App.css"
+import "./App.css";
 
 import { useState } from "react";
 
-import Login from "./pages/Login/Login";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Cadastro from "./pages/Cadastro/Cadastro";
 import Feed from "./pages/Feed/Feed";
+import Login from "./pages/Login/Login";
 
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-
-import Alert, { AlertColor } from '@mui/material/Alert';
-import Fade from '@mui/material/Fade';
+import Alert, { AlertColor } from "@mui/material/Alert";
+import Fade from "@mui/material/Fade";
 
 function App() {
-  type AlertType = { message: string; severity: AlertColor | undefined; };
-  const [alert, setAlert] = useState<AlertType>({ message: "", severity: undefined });
+  type AlertType = { message: string; severity: AlertColor | undefined };
+  const [alert, setAlert] = useState<AlertType>({
+    message: "",
+    severity: undefined,
+  });
 
   return (
     <>
@@ -30,7 +32,9 @@ function App() {
               left: "50%",
               transform: "translate(-50%)",
             }}
-            onClose={() => { setAlert(prev => ({ ...prev, message: "" })) }}
+            onClose={() => {
+              setAlert((prev) => ({ ...prev, message: "" }));
+            }}
           >
             {alert.message}
           </Alert>
@@ -38,13 +42,13 @@ function App() {
 
         <Routes>
           <Route element={<h1>Home</h1>} path="/" />
-          <Route element={<Login />} path="/login" />
+          <Route element={<Login setAlert={setAlert}/>} path="/login" />
           <Route element={<Cadastro setAlert={setAlert} />} path="/cadastro" />
           <Route element={<Feed />} path="/feed" />
         </Routes>
-      </BrowserRouter >
+      </BrowserRouter>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
