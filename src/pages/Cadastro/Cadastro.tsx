@@ -5,10 +5,13 @@ import Input from "../../components/Input/Input";
 
 import { AlertColor, Button } from "@mui/material";
 
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 type CadastroProps = {
-  setAlert: (alert: { message: string, severity: AlertColor | undefined }) => void,
+  setAlert: (alert: {
+    message: string;
+    severity: AlertColor | undefined;
+  }) => void;
 };
 
 function Cadastro(props: CadastroProps) {
@@ -50,8 +53,7 @@ function Cadastro(props: CadastroProps) {
           severity: "success",
         });
         navigate("/login");
-      }
-      else {
+      } else {
         // Posteriormente pode ser feito o tratamento para respostas diferentes da api (ex: pk duplicada).
         props.setAlert({
           message: "Erro ao realizar cadastro!",
@@ -60,8 +62,7 @@ function Cadastro(props: CadastroProps) {
 
         setFormData({ name: "", email: "", password: "" });
       }
-    }
-    catch (error) {
+    } catch (error) {
       props.setAlert({
         message: "Erro ao realizar cadastro!",
         severity: "error",
@@ -77,8 +78,7 @@ function Cadastro(props: CadastroProps) {
     event.preventDefault();
 
     requestCadastro();
-
-  }
+  };
 
   return (
     <>
