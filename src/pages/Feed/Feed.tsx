@@ -1,32 +1,63 @@
-import Postagem from "../../components/Postagem/Postagem";
-import Header from "../../components/Header/Header";
+import { Stack } from "@mui/material";
+import { Suspense } from "react";
 import Footer from "../../components/Footer/Footer";
-import { Stack } from "@mui/material"
+import Header from "../../components/Header/Header";
+import Postagem from "../../components/Postagem/Postagem";
+import { fetchData, use } from "../../data/fetchData";
 
-function ComponenteExemplo() {
-    const postagens = [
-        { urlImgPerfil: "https://picsum.photos/40/40", nomeUsuario: "Simone_1", tipo: "Ocorrência - ICMC", descricao: "Árvore tombada na saída da matemática", urlImagem: "https://picsum.photos/1170/720" },
-        { urlImgPerfil: "https://picsum.photos/80/80", nomeUsuario: "Fuzeto", tipo: "Alerta - ICMC", descricao: "Sem internet em todo o instituto de matemática e computação, eduroam caiu hoje cedo!", urlImagem: "https://picsum.photos/1171/721" },
-        { urlImgPerfil: "https://picsum.photos/120/120", nomeUsuario: "Anônimo", tipo: "Denúncia - ICMC", descricao: "Pessoas estranhas entraram em grupo na noite de 02/10", urlImagem: "https://picsum.photos/1172/722" }
-    ]
+// {
+//     "id": 5,
+//     "emailAuthor": "simone123@gmail.com",
+//     "nameAuthor": "Simone",
+//     "idCommunity": 1,
+//     "nameCommunity": "USP",
+//     "title": "EDU EDU TITLE",
+//     "content": "EDU EDU EDU",
+//     "type": "ALERTA",
+//     "status": "PENDENTE",
+//     "images": []
+//   },
 
-    return (
-        
-        <Stack justifyContent="center" alignItems="center" spacing={1}>
-            <Header/>
-            {postagens.map((postagem, index) => (
-                <Postagem
-                    key={index}
-                    urlImgPerfil={postagem.urlImgPerfil}
-                    nomeUsuario={postagem.nomeUsuario}
-                    tipo={postagem.tipo}
-                    descricao={postagem.descricao}
-                    urlImagem={postagem.urlImagem}
-                />
-            ))}
-            <Footer/>
-        </Stack>
-    )
+const getPostagens = () => {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+  const token = localStorage.getItem("vigilancia-token");
+  const requestConfig = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+  };
+  return use(fetchData(`${apiBaseUrl}/post`, requestConfig));
+};
+
+function Feed() {
+  const postagens = getPostagens();
+  console.log(postagens);
+
+  return (
+    <Stack justifyContent="center" alignItems="center" spacing={1}>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Header />
+        {!postagens ? (
+          <p>Carregando...</p>
+        ) : (
+          postagens?.map((postagem, index) => (
+            <Postagem
+              key={index}
+              nomeUsuario={postagem.nameAuthor}
+              tipo={postagem.type}
+              descricao={postagem.content}
+              // missing
+              urlImgPerfil={postagem.urlImgPerfil}
+              urlImagem={postagem.urlImagem}
+            />
+          ))
+        )}
+        <Footer />
+      </Suspense>
+    </Stack>
+  );
 }
 
-export default ComponenteExemplo;
+export default Feed;
