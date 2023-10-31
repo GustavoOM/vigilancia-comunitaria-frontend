@@ -59,7 +59,7 @@ function Login(props: LoginProps) {
         severity: "success",
       });
 
-      localStorage.setItem("vigilancia-token", `Bearer ${data.token}`);
+      localStorage.setItem("vigilancia-token", data.token);
 
       setTimeout(() => {
         navigate("/feed");
