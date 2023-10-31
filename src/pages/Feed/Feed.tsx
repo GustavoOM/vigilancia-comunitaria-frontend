@@ -1,7 +1,7 @@
 import Postagem from "../../components/Postagem/Postagem";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { Stack } from "@mui/material"
 
 function Feed() {
@@ -11,7 +11,7 @@ function Feed() {
         { urlImgPerfil: "https://picsum.photos/120/120", nameAuthor: "Anônimo", type: "Denúncia - ICMC", content: "Pessoas estranhas entraram em grupo na noite de 02/10", images: "https://picsum.photos/1172/722" }
     ]
 
-    const [postagens, setPostagensa] = useState([]);
+    const [postagens, setPostagens] = useState([]);
 
     useEffect(() => {
         fetchData();
@@ -31,7 +31,7 @@ function Feed() {
             const response = await fetch(`${apiBaseUrl}/post`, requestConfig);
             const result = await response.json();
 
-            setPostagensa(result);
+            setPostagens(result);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -41,18 +41,20 @@ function Feed() {
     return (
 
         <Stack justifyContent="center" alignItems="center" spacing={1}>
-            <Header />
-            {postagens.map((postagem, index) => (
-                <Postagem
-                    key={index}
-                    urlImgPerfil={/*postagem['urlImgPerfil'] */ "https://picsum.photos/120/120"}
-                    nomeUsuario={postagem['nameAuthor']}
-                    tipo={postagem['type']}
-                    descricao={postagem['content']}
-                    urlImagem={/*postagem['images']*/"https://picsum.photos/1170/720"}
-                />
-            ))}
-            <Footer />
+            <Suspense fallback={<div>Loading...</div>}>
+                <Header />
+                {postagens.map((postagem, index) => (
+                    <Postagem
+                        key={index}
+                        urlImgPerfil={/*postagem['urlImgPerfil'] */ "https://picsum.photos/120/120"}
+                        nomeUsuario={postagem['nameAuthor']}
+                        tipo={postagem['type']}
+                        descricao={postagem['content']}
+                        urlImagem={/*postagem['images']*/"https://picsum.photos/1170/720"}
+                    />
+                ))}
+                <Footer />
+            </Suspense>
         </Stack>
     )
 }
