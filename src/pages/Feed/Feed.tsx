@@ -1,7 +1,7 @@
 import Postagem from "../../components/Postagem/Postagem";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
-import { Suspense, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Stack } from "@mui/material"
 
 function Feed() {
@@ -40,22 +40,31 @@ function Feed() {
 
     return (
 
-        <Stack justifyContent="center" alignItems="center" spacing={1}>
-            <Suspense fallback={<div>Loading...</div>}>
-                <Header />
-                {postagens.map((postagem, index) => (
-                    <Postagem
-                        key={index}
-                        urlImgPerfil={/*postagem['urlImgPerfil'] */ "https://picsum.photos/120/120"}
-                        nomeUsuario={postagem['nameAuthor']}
-                        tipo={postagem['type']}
-                        descricao={postagem['content']}
-                        urlImagem={/*postagem['images']*/"https://picsum.photos/1170/720"}
-                    />
-                ))}
-                <Footer />
-            </Suspense>
-        </Stack>
+        <>
+            <Header />
+
+            {postagens?.length != 0 ?
+                <Stack justifyContent="center" alignItems="center" spacing={1} bgcolor={"red"}>
+                    {postagens.map((postagem, index) => (
+                        <Postagem
+                            key={index}
+                            urlImgPerfil={/*postagem['urlImgPerfil'] */ "https://picsum.photos/120/120"}
+                            nomeUsuario={postagem['nameAuthor']}
+                            tipo={postagem['type']}
+                            descricao={postagem['content']}
+                            urlImagem={/*postagem['images']*/"https://picsum.photos/1170/720"}
+                        />
+                    ))}
+                </Stack >
+                : (
+                    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <h6> Não há postagens. Crie a sua!</h6>
+                    </div>
+                )
+            }
+
+            <Footer />
+        </>
     )
 }
 
