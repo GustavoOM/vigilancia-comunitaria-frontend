@@ -19,9 +19,11 @@ const ModalCriarPostagem = forwardRef(function ModalCriarPostagem(props, ref) {
     useState(false);
 
   const [formData, setFormData] = useState({
-    email: "",
-    senha: "",
-    lembrar: false,
+    content: "EDU EDU EDU",
+    idCommunity: 1,
+    status: "PENDENTE",
+    title: "EDU EDU TITLE",
+    type: "ALERTA",
   });
   function handleFormOnChange(event: FormEvent) {
     const { name, value, type, checked } = event.target as HTMLInputElement;
@@ -31,9 +33,60 @@ const ModalCriarPostagem = forwardRef(function ModalCriarPostagem(props, ref) {
       [name]: type !== "checkbox" ? value : checked,
     }));
   }
+  async function requestCreatePostagem() {
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+    try {
+      const token = localStorage.getItem("vigilancia-token");
 
-  const handleFormSubmit = (event: FormEvent) => {
+      const requestConfig = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify(formData),
+      };
+
+      const response = await fetch(
+        `${apiBaseUrl}/post/create-post`,
+        requestConfig
+      );
+      const data = await response.json();
+
+      console.log({ data });
+
+      // if (response.status !== 200) {
+      //   props.setAlert({
+      //     message: "Erro ao realizar login!",
+      //     severity: "error",
+      //   });
+      //   return;
+      // }
+      // console.log(data);
+
+      // props.setAlert({
+      //   message: "Login realizado!",
+      //   severity: "success",
+      // });
+
+      // setTimeout(() => {
+      //   navigate("/feed");
+      // }, 1000);
+    } catch (error) {
+      // props.setAlert({
+      //   message: "Erro ao realizar login!",
+      //   severity: "error",
+      // });
+
+      // setFormData({ email: "", senha: "", lembrar: false });
+
+      console.error(error);
+    }
+  }
+
+  const handleFormSubmit = async (event: FormEvent) => {
     event.preventDefault();
+    await requestCreatePostagem();
   };
 
   useImperativeHandle(ref, () => ({
