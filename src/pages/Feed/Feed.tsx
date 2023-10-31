@@ -49,8 +49,10 @@ function Feed() {
               tipo={postagem.type}
               descricao={postagem.content}
               // missing
-              urlImgPerfil={postagem.urlImgPerfil}
-              urlImagem={postagem.urlImagem}
+              urlImgPerfil={
+                postagem?.urlImgPerfil ?? "https://picsum.photos/40/40"
+              }
+              urlImagem={postagem.urlImagem ?? "https://picsum.photos/1172/722"}
             />
           ))
         )}
