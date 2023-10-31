@@ -1,31 +1,33 @@
-import { forwardRef, useImperativeHandle, useState } from "react";
+import { useState } from "react";
 
 import CloseIcon from "@mui/icons-material/Close";
+import FileUploadIcon from "@mui/icons-material/FileUpload";
 import { Button, FormHelperText, IconButton } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import Select from "@mui/material/Select";
 import Input from "../Input/Input";
-
 const comunidades = ["ICMC"];
 
-const tipos = ["Denúcia", "Alerta", "Ocorrência"];
+const tipos = ["OCORRENCIA", "ALERTA", "DENUNCIA"];
+const status = ["PENDENTE", "APROVADO", "REPROVADO"];
 
 export type ModalCriarPostagemHandles = {
-  abrirModal: () => void;
+  handleClose: (bool: boolean) => void;
+  isOpen: boolean;
 };
 
-const ModalCriarPostagem = forwardRef(function ModalCriarPostagem(props, ref) {
-  const [mostrarModalCriarPostagem, setMostrarModalCriarPostagem] =
-    useState(false);
-
+const ModalCriarPostagem = function ModalCriarPostagem(
+  props: ModalCriarPostagemHandles
+) {
   const [formData, setFormData] = useState({
-    content: "EDU EDU EDU",
+    content: "",
     idCommunity: 1,
-    status: "PENDENTE",
-    title: "EDU EDU TITLE",
+    status: status[0],
+    title: "",
     type: "ALERTA",
   });
-  function handleFormOnChange(event: FormEvent) {
+
+  function handleFormOnChange(event) {
     const { name, value, type, checked } = event.target as HTMLInputElement;
 
     setFormData((prev) => ({
@@ -33,8 +35,10 @@ const ModalCriarPostagem = forwardRef(function ModalCriarPostagem(props, ref) {
       [name]: type !== "checkbox" ? value : checked,
     }));
   }
+
   async function requestCreatePostagem() {
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+    console.log({ formData });
     try {
       const token = localStorage.getItem("vigilancia-token");
 
@@ -86,19 +90,14 @@ const ModalCriarPostagem = forwardRef(function ModalCriarPostagem(props, ref) {
 
   const handleFormSubmit = async (event: FormEvent) => {
     event.preventDefault();
+
     await requestCreatePostagem();
   };
 
-  useImperativeHandle(ref, () => ({
-    abrirModal() {
-      setMostrarModalCriarPostagem(true);
-    },
-  }));
-
   return (
     <Dialog
-      open={mostrarModalCriarPostagem}
-      onClose={() => setMostrarModalCriarPostagem(false)}
+      open={props.isOpen}
+      onClose={() => props.handleClose(false)}
       fullWidth
     >
       <form style={{ padding: "32px" }} onSubmit={handleFormSubmit}>
@@ -111,7 +110,7 @@ const ModalCriarPostagem = forwardRef(function ModalCriarPostagem(props, ref) {
         >
           <IconButton
             aria-label="close"
-            onClick={() => setMostrarModalCriarPostagem(false)}
+            onClick={() => props.handleClose(false)}
             sx={{
               marginLeft: "auto",
               color: (theme) => theme.palette.grey[500],
@@ -133,8 +132,9 @@ const ModalCriarPostagem = forwardRef(function ModalCriarPostagem(props, ref) {
 
         <Select
           size="small"
+          name="comunidades"
           style={{ width: "100%", marginBottom: "16px" }}
-          defaultValue={tipos[0]}
+          defaultValue={comunidades[0]}
           onChange={handleFormOnChange}
         >
           {comunidades.map((comunidade, index) => (
@@ -156,8 +156,9 @@ const ModalCriarPostagem = forwardRef(function ModalCriarPostagem(props, ref) {
 
         <Select
           size="small"
+          name="type"
           style={{ width: "100%", marginBottom: "16px" }}
-          defaultValue={comunidades[0]}
+          defaultValue={tipos[0]}
           onChange={handleFormOnChange}
         >
           {tipos.map((tipo, index) => (
@@ -168,15 +169,15 @@ const ModalCriarPostagem = forwardRef(function ModalCriarPostagem(props, ref) {
         </Select>
 
         <Input
-          handleOnChange={handleFormOnChange}
           label="Descrição"
-          name="descricao"
-          placeholder="Descrição"
+          placeholder="Digite a descrição do seu post"
           type="text"
-          value={"fads"}
+          name="content"
+          value={formData.content}
           required={false}
           rows={5}
           width="100%"
+          handleOnChange={handleFormOnChange}
         />
 
         <FormHelperText
@@ -191,19 +192,9 @@ const ModalCriarPostagem = forwardRef(function ModalCriarPostagem(props, ref) {
         </FormHelperText>
 
         {/* Para rever */}
-        {/* <OutlinedInput
-          placeholder="Enviar imagem"
-          style={{
-            minWidth: "100%",
-            fontWeight: "500",
-            fontSize: "",
-          }}
-          size="small"
-          color="secondary"
-          endAdornment={ */}
 
         {/* Não precisamos por agora */}
-        {/* <div style={{ display: "flex", alignItems: "center" }}>
+        <div style={{ display: "flex", alignItems: "center" }}>
           <input
             accept="image/*"
             style={{ display: "none" }}
@@ -214,7 +205,7 @@ const ModalCriarPostagem = forwardRef(function ModalCriarPostagem(props, ref) {
           <label htmlFor="upload-button">
             <FileUploadIcon style={{ color: "var(--roxo600)" }} />
           </label>
-        </div> */}
+        </div>
         {/* }
         /> */}
 
@@ -236,6 +227,6 @@ const ModalCriarPostagem = forwardRef(function ModalCriarPostagem(props, ref) {
       </form>
     </Dialog>
   );
-});
+};
 
 export default ModalCriarPostagem;
