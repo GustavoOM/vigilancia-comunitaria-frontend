@@ -23,7 +23,7 @@ const ModalCriarPostagem = function ModalCriarPostagem(
     content: "",
     idCommunity: 1,
     status: status[0],
-    title: "",
+    title: "teste",
     type: "ALERTA",
   });
 
@@ -45,8 +45,8 @@ const ModalCriarPostagem = function ModalCriarPostagem(
       const requestConfig = {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
           Authorization: token,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       };
