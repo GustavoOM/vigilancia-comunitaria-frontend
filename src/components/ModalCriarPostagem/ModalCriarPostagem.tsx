@@ -1,15 +1,35 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 
-import CloseIcon from "@mui/icons-material/Close";
-import FileUploadIcon from "@mui/icons-material/FileUpload";
-import { Button, FormHelperText, IconButton } from "@mui/material";
-import Dialog from "@mui/material/Dialog";
-import Select from "@mui/material/Select";
 import Input from "../Input/Input";
-const comunidades = ["ICMC"];
+
+import { Button, Chip, FormHelperText, IconButton, MenuItem } from "@mui/material";
+import Dialog from "@mui/material/Dialog";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import CloseIcon from "@mui/icons-material/Close";
+import ClearIcon from '@mui/icons-material/Clear';
+import FileUploadIcon from "@mui/icons-material/FileUpload";
+import { styled } from '@mui/material/styles';
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
+
+const comunidades = [{ id: 1, nome: "ICMC" }];
+const comunidade_padrao = comunidades[0].id;
 
 const tipos = ["OCORRENCIA", "ALERTA", "DENUNCIA"];
+const tipo_padrao = tipos[0];
+
 const status = ["PENDENTE", "APROVADO", "REPROVADO"];
+const status_padrao = status[0];
 
 export type ModalCriarPostagemHandles = {
   handleClose: (bool: boolean) => void;
@@ -21,13 +41,13 @@ const ModalCriarPostagem = function ModalCriarPostagem(
 ) {
   const [formData, setFormData] = useState({
     content: "",
-    idCommunity: 1,
-    status: status[0],
-    title: "teste",
-    type: "ALERTA",
+    idCommunity: comunidade_padrao,
+    status: status_padrao,
+    type: tipo_padrao,
+    image: null as File | null,
   });
 
-  function handleFormOnChange(event) {
+  function handleFormOnChange(event: (FormEvent | SelectChangeEvent<string | number>)) {
     const { name, value, type, checked } = event.target as HTMLInputElement;
 
     setFormData((prev) => ({
@@ -36,63 +56,57 @@ const ModalCriarPostagem = function ModalCriarPostagem(
     }));
   }
 
-  async function requestCreatePostagem() {
-    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
-    console.log({ formData });
-    try {
-      const token = localStorage.getItem("vigilancia-token");
-
-      const requestConfig = {
-        method: "POST",
-        headers: {
-          Authorization: token,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      };
-
-      const response = await fetch(
-        `${apiBaseUrl}/post/create-post`,
-        requestConfig
-      );
-      const data = await response.json();
-
-      console.log({ data });
-
-      // if (response.status !== 200) {
-      //   props.setAlert({
-      //     message: "Erro ao realizar login!",
-      //     severity: "error",
-      //   });
-      //   return;
-      // }
-      // console.log(data);
-
-      // props.setAlert({
-      //   message: "Login realizado!",
-      //   severity: "success",
-      // });
-
-      // setTimeout(() => {
-      //   navigate("/feed");
-      // }, 1000);
-    } catch (error) {
-      // props.setAlert({
-      //   message: "Erro ao realizar login!",
-      //   severity: "error",
-      // });
-
-      // setFormData({ email: "", senha: "", lembrar: false });
-
-      console.error(error);
-    }
-  }
-
   const handleFormSubmit = async (event: FormEvent) => {
     event.preventDefault();
 
     await requestCreatePostagem();
+    props.handleClose(false);
+    window.location.reload();
   };
+
+  const handleRemoveImage = () => {
+    setFormData(prev => ({
+      ...prev,
+      image: null
+    }));
+  }
+
+  async function requestCreatePostagem() {
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+    
+    console.log({ formData });
+
+    try {
+      const token = localStorage.getItem("vigilancia-token");
+
+      const imageFormData = new FormData();
+      imageFormData.append("image", formData.image as Blob);
+
+      const requestConfig = {
+        method: "POST",
+        headers: {
+          Authorization: token ?? "",
+        },
+        body: formData.image ? imageFormData : null,
+      };
+
+      const requestUrl = `${apiBaseUrl}/post/create-post`
+        + `?idCommunity=${formData.idCommunity}`
+        + `&status=${formData.status}`
+        + `&content=${formData.content}`
+        + `&type=${formData.type}`;
+
+      const response = await fetch(
+        requestUrl,
+        requestConfig
+      );
+
+      const data = await response.json();
+      console.log({ data });
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <Dialog
@@ -132,15 +146,15 @@ const ModalCriarPostagem = function ModalCriarPostagem(
 
         <Select
           size="small"
-          name="comunidades"
+          name="idCommunity"
           style={{ width: "100%", marginBottom: "16px" }}
-          defaultValue={comunidades[0]}
+          value={formData.idCommunity}
           onChange={handleFormOnChange}
         >
           {comunidades.map((comunidade, index) => (
-            <option key={index} value={comunidade} style={{ padding: "8px" }}>
-              {comunidade}
-            </option>
+            <MenuItem key={index} value={comunidade.id} style={{ padding: "8px" }}>
+              {comunidade.nome}
+            </MenuItem>
           ))}
         </Select>
 
@@ -158,13 +172,13 @@ const ModalCriarPostagem = function ModalCriarPostagem(
           size="small"
           name="type"
           style={{ width: "100%", marginBottom: "16px" }}
-          defaultValue={tipos[0]}
+          value={formData.type}
           onChange={handleFormOnChange}
         >
           {tipos.map((tipo, index) => (
-            <option key={index} value={tipo} style={{ padding: "8px" }}>
+            <MenuItem key={index} value={tipo} style={{ padding: "8px" }}>
               {tipo}
-            </option>
+            </MenuItem>
           ))}
         </Select>
 
@@ -191,23 +205,46 @@ const ModalCriarPostagem = function ModalCriarPostagem(
           Imagem
         </FormHelperText>
 
-        {/* Para rever */}
-
-        {/* Não precisamos por agora */}
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <input
-            accept="image/*"
-            style={{ display: "none" }}
-            id="upload-button"
-            multiple
-            type="file"
-          />
-          <label htmlFor="upload-button">
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <IconButton component="label">
             <FileUploadIcon style={{ color: "var(--roxo600)" }} />
-          </label>
+            <VisuallyHiddenInput type="file" accept="image/*" onChange={(event) => {
+              setFormData(prev => ({
+                ...prev,
+                image: event.target.files && event.target.files[0]}
+              ));
+            }} />
+          </IconButton>
+
+          { formData.image
+            ? 
+              <Chip
+                sx={{
+                  color: "var(--roxo500)",
+                  height: "30px",
+                  fontSize: "13px",
+                  fontWeight: "bold",
+                  padding: "6px",
+                  borderWidth: "1px",
+                  borderColor: "var(--roxo500)"
+                }}
+                variant="outlined"
+                deleteIcon={<ClearIcon style={{color: "var(--roxo500)", fontSize: "18px"}} />}
+                label={formData.image?.name}
+                onDelete={handleRemoveImage}
+              />
+            : <p
+                style={{
+                  color: "var(--roxo500)",
+                  fontFamily: "Roboto",
+                  fontSize: "13px",
+                  fontWeight: "bold",
+                }}
+              >
+                Nenhuma imagem selecionada
+              </p>
+          }
         </div>
-        {/* }
-        /> */}
 
         <Button
           size="large"

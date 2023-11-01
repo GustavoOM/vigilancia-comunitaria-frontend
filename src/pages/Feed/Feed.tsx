@@ -49,7 +49,7 @@ function Feed() {
               tipo={postagem["type"]}
               descricao={postagem["content"]}
               urlImagem={
-                /*postagem['images']*/ "https://picsum.photos/1170/720"
+                postagem['images'][0] ?? "https://picsum.photos/1170/720"
               }
             />
           ))}
