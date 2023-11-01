@@ -17,7 +17,7 @@ function Feed() {
       const requestConfig = {
         method: "GET",
         headers: {
-          Authorization: "Bearer " + localStorage.getItem("vigilancia-token"),
+          Authorization: localStorage.getItem("vigilancia-token"),
           "Content-Type": "application/json",
         },
       };
@@ -31,11 +31,13 @@ function Feed() {
     }
   };
 
+  console.log(postagens);
+
   return (
     <>
       <Header />
 
-      {postagens?.length != 0 ? (
+      {postagens?.length > 0 ? (
         <Stack justifyContent="center" alignItems="center" spacing={1}>
           {postagens.map((postagem, index) => (
             <Postagem
