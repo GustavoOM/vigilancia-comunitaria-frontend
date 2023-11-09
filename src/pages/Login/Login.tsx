@@ -1,6 +1,6 @@
 import { Button, Checkbox, FormControlLabel } from "@mui/material";
 import { FormEvent, FormEventHandler, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import reactLogo from "../../assets/logo.svg";
 import Input from "../../components/Input/Input";
 
@@ -9,6 +9,16 @@ export type LoginProps = {
 };
 
 function Login(props: LoginProps) {
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const isAuthRequired = searchParams.get('auth') === 'false';
+
+  const token = localStorage.getItem("vigilancia-token");
+  if(token){
+    window.location.href = "/feed";
+  }
+
   const [formData, setFormData] = useState({
     email: "",
     senha: "",
@@ -91,6 +101,11 @@ function Login(props: LoginProps) {
 
   return (
     <>
+      {isAuthRequired && (
+        <div className="error-message">
+          <p>{"Você deve primeiro fazer login!"}</p>
+        </div>
+      )}
       <div
         className="LogoContainer"
         style={{

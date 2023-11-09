@@ -149,3 +149,15 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+
+.error-message {
+	border: 1px solid #ff0000;
+	background-color: #ffebeb;
+	padding: 10px;
+	margin: 30px auto;
+	margin-bottom: -30px;
+	border-radius: 5px;
+	color: #ff0000;
+	text-align: center;
+	max-width: 400px;
+  }

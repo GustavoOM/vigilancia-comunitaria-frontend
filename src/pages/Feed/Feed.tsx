@@ -5,11 +5,16 @@ import Header from "../../components/Header/Header";
 import Postagem from "../../components/Postagem/Postagem";
 
 function Feed() {
+  const token = localStorage.getItem("vigilancia-token");
+  if(!token){
+    window.location.href = "/login?auth=false";
+  }
   const [postagens, setPostagens] = useState([]);
 
   useEffect(() => {
     fetchData();
   }, []);
+
 
   const fetchData = async () => {
     try {
