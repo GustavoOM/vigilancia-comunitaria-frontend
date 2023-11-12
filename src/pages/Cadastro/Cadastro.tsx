@@ -1,4 +1,4 @@
-import { FormEvent, FormEventHandler, useState } from "react";
+import { FormEvent, FormEventHandler, useEffect, useState } from "react";
 
 import reactLogo from "../../assets/logo.svg";
 import Input from "../../components/Input/Input";
@@ -15,6 +15,17 @@ type CadastroProps = {
 };
 
 function Cadastro(props: CadastroProps) {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("vigilancia-token");
+    const user = localStorage.getItem("vigilancia-user");
+    
+    if(token){
+      navigate(user === "admin" ? "/admin" : "/feed");
+    }
+  },[navigate]);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -29,8 +40,6 @@ function Cadastro(props: CadastroProps) {
       [name]: type !== "checkbox" ? value : checked,
     }));
   }
-
-  const navigate = useNavigate();
 
   async function requestCadastro() {
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
