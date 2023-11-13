@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Cadastro from "./pages/Cadastro/Cadastro";
 import Feed from "./pages/Feed/Feed";
 import Login from "./pages/Login/Login";
+import Admin from "./pages/Admin/Admin";
 
 import Alert, { AlertColor } from "@mui/material/Alert";
 import Fade from "@mui/material/Fade";
@@ -25,12 +26,14 @@ function App() {
             variant="outlined"
             severity={alert.severity}
             style={{
+              backgroundColor: "white",
               width: "80vw",
               maxWidth: "360px",
-              marginTop: "16px",
+              marginTop: "8px",
               position: "absolute",
               left: "50%",
               transform: "translate(-50%)",
+              zIndex: "999999999999999999999",
             }}
             onClose={() => {
               setAlert((prev) => ({ ...prev, message: "" }));
@@ -44,7 +47,8 @@ function App() {
           <Route element={<h1>Home</h1>} path="/" />
           <Route element={<Login setAlert={setAlert}/>} path="/login" />
           <Route element={<Cadastro setAlert={setAlert} />} path="/cadastro" />
-          <Route element={<Feed />} path="/feed" />
+          <Route element={<Feed setAlert={setAlert} />} path="/feed" />
+          <Route element={<Admin setAlert={setAlert} />} path="/admin" />
         </Routes>
       </BrowserRouter>
     </>

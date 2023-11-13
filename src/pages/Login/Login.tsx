@@ -1,30 +1,35 @@
-import { Button, Checkbox, FormControlLabel } from "@mui/material";
-import { FormEvent, FormEventHandler, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { AlertColor, Button, Checkbox, FormControlLabel } from "@mui/material";
+import { FormEvent, FormEventHandler, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import reactLogo from "../../assets/logo.svg";
 import Input from "../../components/Input/Input";
 
 export type LoginProps = {
-  setAlert: (alert: { message: string; severity: string | undefined }) => void;
+  setAlert: (alert: { message: string; severity: AlertColor | undefined }) => void;
 };
 
 function Login(props: LoginProps) {
 
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const isAuthRequired = searchParams.get('auth') === 'false';
+  const navigate = useNavigate();
 
-  const token = localStorage.getItem("vigilancia-token");
-  if(token){
-    window.location.href = "/feed";
-  }
+  // const location = useLocation();
+  // const searchParams = new URLSearchParams(location.search);
+  // const isAuthRequired = searchParams.get('auth') === 'false';
+
+  useEffect(() => {
+    const token = localStorage.getItem("vigilancia-token");
+    const user = localStorage.getItem("vigilancia-user");
+    
+    if(token){
+      navigate(user === "admin" ? "/admin" : "/feed");
+    }
+  },[navigate]);
 
   const [formData, setFormData] = useState({
     email: "",
     senha: "",
     lembrar: false,
   });
-  const navigate = useNavigate();
 
   function handleFormOnChange(event: FormEvent) {
     const { name, value, type, checked } = event.target as HTMLInputElement;
@@ -55,6 +60,14 @@ function Login(props: LoginProps) {
       const response = await fetch(`${apiBaseUrl}/auth`, requestConfig);
       const data = await response.json();
 
+      if (response.status === 403) {
+        props.setAlert({
+          message: "Credenciais inválidas!",
+          severity: "warning",
+        });
+        return;
+      }
+
       if (response.status !== 200) {
         props.setAlert({
           message: "Erro ao realizar login!",
@@ -62,17 +75,19 @@ function Login(props: LoginProps) {
         });
         return;
       }
-      console.log(data);
-
-      props.setAlert({
-        message: "Login realizado!",
-        severity: "success",
-      });
 
       localStorage.setItem("vigilancia-token", `Bearer ${data.token}`);
+      // Forma provisória de pegar o user, talvez possa ser retornado pelo back no request de login.
+      const user = formData.email.substring(0, formData.email.indexOf("@"));
+      localStorage.setItem("vigilancia-user", user);
 
       setTimeout(() => {
-        navigate("/feed");
+        props.setAlert({
+          message: "Login realizado!",
+          severity: "success",
+        });
+
+        navigate(user === "admin" ? "/admin" : "/feed");
       }, 1000);
     } catch (error) {
       props.setAlert({
@@ -101,11 +116,11 @@ function Login(props: LoginProps) {
 
   return (
     <>
-      {isAuthRequired && (
+      {/* {isAuthRequired && (
         <div className="error-message">
           <p>{"Você deve primeiro fazer login!"}</p>
         </div>
-      )}
+      )} */}
       <div
         className="LogoContainer"
         style={{
