@@ -6,7 +6,7 @@ import Postagem from "../../components/Postagem/Postagem";
 
 function Feed() {
   const token = localStorage.getItem("vigilancia-token");
-  if(!token){
+  if (!token) {
     window.location.href = "/login?auth=false";
   }
   const [postagens, setPostagens] = useState([]);
@@ -31,6 +31,7 @@ function Feed() {
       const result = await response.json();
 
       setPostagens(result);
+
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -39,7 +40,7 @@ function Feed() {
   console.log(postagens);
 
   return (
-    <>
+    <div style={{ marginBottom: "56px" }}>
       <Header />
 
       {postagens?.length > 0 ? (
@@ -70,10 +71,11 @@ function Feed() {
         >
           <h6> Não há postagens. Crie a sua!</h6>
         </div>
-      )}
+      )
+      }
 
       <Footer />
-    </>
+    </div >
   );
 }
 
