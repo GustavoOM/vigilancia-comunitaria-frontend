@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
 import Input from "../Input/Input";
 
@@ -9,6 +9,11 @@ import CloseIcon from "@mui/icons-material/Close";
 import ClearIcon from '@mui/icons-material/Clear';
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import { styled } from '@mui/material/styles';
+
+interface Comunidade {
+  id: number;
+  name: string;
+}
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -22,7 +27,7 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 
-const comunidades = [{ id: 1, nome: "ICMC" }];
+let comunidades = [{ id: 1, nome: "ICMC" }];
 const comunidade_padrao = comunidades[0].id;
 
 const tipos = ["OCORRENCIA", "ALERTA", "DENUNCIA"];
@@ -39,6 +44,7 @@ export type ModalCriarPostagemHandles = {
 const ModalCriarPostagem = function ModalCriarPostagem(
   props: ModalCriarPostagemHandles
 ) {
+  const [comunidades, setComunidades] = useState([{ id: 1, nome: "ICMC" }]);
   const [formData, setFormData] = useState({
     content: "",
     idCommunity: comunidade_padrao,
@@ -46,6 +52,36 @@ const ModalCriarPostagem = function ModalCriarPostagem(
     type: tipo_padrao,
     image: null as File | null,
   });
+
+  useEffect(() => {
+    const handleUpdateCommunities = async () => {
+      const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+      try {
+        const token = localStorage.getItem("vigilancia-token");
+        const requestConfig = {
+          method: "GET",
+          headers: {
+            Authorization: token ?? "",
+          },
+        };
+
+        const requestUrl = `${apiBaseUrl}/user/communities`;
+        const response = await fetch(requestUrl, requestConfig);
+        const comunidadesData: Comunidade[] = await response.json();
+        const comunidadesFormatadas = comunidadesData.map((item:Comunidade) => ({
+          id: item.id,
+          nome: item.name
+        }));
+        console.log(comunidadesFormatadas)
+
+        setComunidades(comunidadesFormatadas);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    handleUpdateCommunities();
+  }, []);
 
   function handleFormOnChange(event: (FormEvent | SelectChangeEvent<string | number>)) {
     const { name, value, type, checked } = event.target as HTMLInputElement;
@@ -111,7 +147,7 @@ const ModalCriarPostagem = function ModalCriarPostagem(
   return (
     <Dialog
       open={props.isOpen}
-      onClose={() => props.handleClose(false)}
+      onClose ={() => props.handleClose(false)}
       fullWidth
     >
       <form style={{ padding: "32px" }} onSubmit={handleFormSubmit}>

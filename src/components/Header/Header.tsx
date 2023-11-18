@@ -2,7 +2,13 @@ import * as React from 'react';
 import { AppBar, Toolbar, Typography, IconButton } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SearchIcon from '@mui/icons-material/Search';
+import Logout from '@mui/icons-material/Logout';
 import reactLogo from "../../assets/logoHeader.svg";
+
+function handleLogout(){
+  localStorage.setItem("vigilancia-token", "");
+  window.location.href = "/login";
+}
 
 function Header() {
   return (
@@ -14,7 +20,7 @@ function Header() {
           </Typography>
           <IconButton
             size="large"
-            aria-label="show 17 new notifications"
+            aria-label="notificações"
             color="secondary"
             sx={{ mr: 2 }}
           >
@@ -24,9 +30,18 @@ function Header() {
             size="large"
             edge="end"
             color="secondary"
-            aria-label="search"
+            aria-label="procurar"
+            sx={{ mr: 2 }}
           >
             <SearchIcon />
+          </IconButton>
+          <IconButton
+            size="large"
+            edge="end"
+            color="secondary"
+            aria-label="sair"
+          >
+            <Logout onClick={() => {handleLogout()}}/>
           </IconButton>
         </Toolbar>
       </AppBar>
