@@ -1,14 +1,27 @@
-import { Stack } from "@mui/material";
+import { AlertColor, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import Postagem from "../../components/Postagem/Postagem";
+import { useNavigate } from "react-router-dom";
 
-function Feed() {
-  const token = localStorage.getItem("vigilancia-token");
-  if(!token){
-    window.location.href = "/login?auth=false";
-  }
+export type FeedProps = {
+  setAlert: (alert: { message: string; severity: AlertColor | undefined }) => void;
+};
+
+function Feed(props: FeedProps) {
+  const { setAlert } = props;
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("vigilancia-token");
+    if (!token) {
+      setAlert({ message: "Você deve primeiro fazer login!", severity: "warning" });
+      navigate("/login");
+    }
+  }, [navigate, setAlert]);
+
   const [postagens, setPostagens] = useState([]);
 
   useEffect(() => {
@@ -22,7 +35,7 @@ function Feed() {
       const requestConfig = {
         method: "GET",
         headers: {
-          Authorization: localStorage.getItem("vigilancia-token"),
+          Authorization: localStorage.getItem("vigilancia-token") ?? "",
           "Content-Type": "application/json",
         },
       };
@@ -31,6 +44,7 @@ function Feed() {
       const result = await response.json();
 
       setPostagens(result);
+
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -39,7 +53,7 @@ function Feed() {
   console.log(postagens);
 
   return (
-    <>
+    <div style={{ marginBottom: "56px" }}>
       <Header />
 
       {postagens?.length > 0 ? (
@@ -70,10 +84,11 @@ function Feed() {
         >
           <h6> Não há postagens. Crie a sua!</h6>
         </div>
-      )}
+      )
+      }
 
       <Footer />
-    </>
+    </div >
   );
 }
 
