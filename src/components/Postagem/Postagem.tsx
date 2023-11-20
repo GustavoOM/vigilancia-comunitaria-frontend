@@ -7,11 +7,12 @@ interface PostagemProps {
     urlImgPerfil: string,
     nomeUsuario: string;
     tipo: string;
+    nomeComunidade: string;
     descricao: string;
     urlImagem: string;
 }
 
-function Postagem({ urlImgPerfil, nomeUsuario, tipo, descricao, urlImagem }: PostagemProps) {
+function Postagem({ urlImgPerfil, nomeUsuario, tipo, nomeComunidade, descricao, urlImagem }: PostagemProps) {
     function stringToColor(string: string) {
         let hash = 0;
         let i;
@@ -55,7 +56,7 @@ function Postagem({ urlImgPerfil, nomeUsuario, tipo, descricao, urlImagem }: Pos
                     : <Avatar {...stringAvatar(nomeUsuario)} />
                 }
                 title={tipo === "DENUNCIA" ? "Anônimo" : nomeUsuario}
-                subheader={handleType(tipo)}
+                subheader={`${handleType(tipo)} - ${nomeComunidade}`}
                 action={
                     < IconButton aria-label="settings" >
                         <MoreVertIcon />

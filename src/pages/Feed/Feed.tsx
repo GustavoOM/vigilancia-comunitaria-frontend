@@ -66,6 +66,7 @@ function Feed(props: FeedProps) {
               }
               nomeUsuario={postagem["nameAuthor"]}
               tipo={postagem["type"]}
+              nomeComunidade={postagem["nameCommunity"]}
               descricao={postagem["content"]}
               urlImagem={
                 postagem['images'][0]
