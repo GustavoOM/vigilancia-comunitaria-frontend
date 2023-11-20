@@ -9,10 +9,11 @@ interface PostagemProps {
     tipo: string;
     nomeComunidade: string;
     descricao: string;
+    criadoEm: Date;
     urlImagem: string;
 }
 
-function Postagem({ urlImgPerfil, nomeUsuario, tipo, nomeComunidade, descricao, urlImagem }: PostagemProps) {
+function Postagem({ urlImgPerfil, nomeUsuario, tipo, nomeComunidade, descricao, criadoEm, urlImagem }: PostagemProps) {
     function stringToColor(string: string) {
         let hash = 0;
         let i;
@@ -46,6 +47,30 @@ function Postagem({ urlImgPerfil, nomeUsuario, tipo, nomeComunidade, descricao, 
         return tipoPostagem == "DENUNCIA" ? "DENÚNCIA" : tipoPostagem == "OCORRENCIA" ? "OCORRÊNCIA" : "ALERTA";
     }
 
+    function handleDate(criadoEm: Date) {
+        const postDate = new Date(criadoEm);
+        const now = new Date();
+        const timeDifference = now - postDate;
+
+        // Calcular diferença em segundos, minutos, horas, etc.
+        const seconds = Math.floor(timeDifference / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+
+        if (days > 0) {
+            return `${days}d`;
+        } else if (hours > 0) {
+            return `${hours}h`;
+        } else if (minutes > 0) {
+            return `${minutes}m`;
+        } else {
+            return `${seconds}s`;
+        }
+    }
+
+
+
     return (
         <Card sx={{ maxWidth: 585, width: "100%" }}>
             <CardHeader
@@ -58,9 +83,15 @@ function Postagem({ urlImgPerfil, nomeUsuario, tipo, nomeComunidade, descricao, 
                 title={tipo === "DENUNCIA" ? "Anônimo" : nomeUsuario}
                 subheader={`${handleType(tipo)} - ${nomeComunidade}`}
                 action={
-                    < IconButton aria-label="settings" >
-                        <MoreVertIcon />
-                    </IconButton >
+                    <>
+                        <Typography variant="body2" color="text.secondary" style={{ marginRight: 16, display: "inline-flex" }}>
+                            {handleDate(criadoEm)}
+                        </Typography>
+
+                        < IconButton aria-label="settings" >
+                            <MoreVertIcon />
+                        </IconButton >
+                    </>
                 }
             />
             {

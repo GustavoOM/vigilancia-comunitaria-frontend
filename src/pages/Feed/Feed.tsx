@@ -53,7 +53,7 @@ function Feed(props: FeedProps) {
   console.log(postagens);
 
   return (
-    <div style={{ marginBottom: "56px" }}>
+    <div style={{ paddingBottom: "56px" }}>
       <Header />
 
       {postagens?.length > 0 ? (
@@ -68,6 +68,7 @@ function Feed(props: FeedProps) {
               tipo={postagem["type"]}
               nomeComunidade={postagem["nameCommunity"]}
               descricao={postagem["content"]}
+              criadoEm={postagem["createdAt"]}
               urlImagem={
                 postagem['images'][0]
               }
