@@ -101,7 +101,7 @@ function Comunidades() {
     });
 
     return (
-        <div style={{ paddingBottom: "56px" }}>
+        <div style={{ paddingBottom: "56px", paddingTop: "12px" }}>
             <Header />
 
             <div style={{ padding: "8px" }}>

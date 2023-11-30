@@ -53,7 +53,7 @@ function Feed(props: FeedProps) {
   console.log(postagens);
 
   return (
-    <div style={{ paddingBottom: "56px" }}>
+    <div style={{ paddingBottom: "56px", paddingTop: "12px" }}>
       <Header />
 
       {postagens?.length > 0 ? (
