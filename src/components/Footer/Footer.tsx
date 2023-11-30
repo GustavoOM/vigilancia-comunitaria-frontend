@@ -5,9 +5,12 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import HomeIcon from "@mui/icons-material/Home";
 import { BottomNavigation, BottomNavigationAction } from "@mui/material";
 import ModalCriarPostagem from "../ModalCriarPostagem/ModalCriarPostagem";
+import { useNavigate } from "react-router-dom";
 
 function Footer() {
   const [isModalOpen, setModalIsOpen] = useState(false);
+
+  const navigate = useNavigate();
 
   return (
     <>
@@ -25,16 +28,17 @@ function Footer() {
       >
         <BottomNavigationAction
           label="Home"
-          icon={<HomeIcon color="secondary" />}
+          icon={<HomeIcon sx={{ color: "var(--roxo700)" }} />}
+          onClick={() => navigate("/feed")}
         />
         <BottomNavigationAction
           label="Add Post"
-          icon={<AddCircleIcon sx={{ fontSize: 40 }} color="secondary" />}
+          icon={<AddCircleIcon sx={{ fontSize: 40, color: "var(--roxo700)" }}  />}
           onClick={() => setModalIsOpen(true)}
         />
         <BottomNavigationAction
           label="Profile"
-          icon={<AccountCircleIcon color="secondary" />}
+          icon={<AccountCircleIcon sx={{ color: "var(--roxo700)" }} />}
         />
       </BottomNavigation>
     </>

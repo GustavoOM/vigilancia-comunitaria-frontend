@@ -163,41 +163,6 @@ function Login(props: LoginProps) {
           handleOnChange={handleFormOnChange}
         />
 
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              minWidth: "360px",
-              font: "500 15px Roboto",
-            }}
-          >
-            <FormControlLabel
-              control={
-                <Checkbox
-                  value="remember"
-                  sx={{
-                    color: "var(--roxo600)",
-                    "&.Mui-checked": {
-                      color: "var(--roxo500)",
-                    },
-                  }}
-                />
-              }
-              label="Lembrar-me"
-              name="lembrar"
-              onChange={handleFormOnChange}
-              checked={formData.lembrar}
-            />
-          </div>
-        </div>
-
         <Button
           size="large"
           variant="contained"
@@ -205,7 +170,7 @@ function Login(props: LoginProps) {
             backgroundColor: "var(--roxo500)",
             minWidth: "360px",
             minHeight: "45px",
-            marginTop: "16px",
+            marginTop: "40px",
             textTransform: "capitalize",
             font: "500 17px Roboto",
           }}

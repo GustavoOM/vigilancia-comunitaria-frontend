@@ -2,7 +2,7 @@ import "./App.css";
 
 import { useState } from "react";
 
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Cadastro from "./pages/Cadastro/Cadastro";
 import Feed from "./pages/Feed/Feed";
 import Login from "./pages/Login/Login";
@@ -10,6 +10,7 @@ import Admin from "./pages/Admin/Admin";
 
 import Alert, { AlertColor } from "@mui/material/Alert";
 import Fade from "@mui/material/Fade";
+import Comunidades from "./pages/Comunidades/Comunidades";
 
 function App() {
   type AlertType = { message: string; severity: AlertColor | undefined };
@@ -44,11 +45,12 @@ function App() {
         </Fade>
 
         <Routes>
-          <Route element={<h1>Home</h1>} path="/" />
+          <Route element={<Navigate to="/login" />} path="/" />
           <Route element={<Login setAlert={setAlert}/>} path="/login" />
           <Route element={<Cadastro setAlert={setAlert} />} path="/cadastro" />
           <Route element={<Feed setAlert={setAlert} />} path="/feed" />
           <Route element={<Admin setAlert={setAlert} />} path="/admin" />
+          <Route element={<Comunidades />} path="/comunidades" />
         </Routes>
       </BrowserRouter>
     </>
