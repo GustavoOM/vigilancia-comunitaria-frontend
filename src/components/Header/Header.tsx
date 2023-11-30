@@ -15,8 +15,8 @@ function Header() {
 
   return (
     <React.Fragment>
-      <AppBar position="fixed" color="inherit">
-        <Toolbar>
+      <AppBar sx={{ height: "68px" }} position="fixed" color="inherit">
+        <Toolbar sx={{ height: "100%" }}>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}>
             <img src={reactLogo} alt="Logo" style={{ height: 30 }} />
           </Typography>
@@ -34,8 +34,9 @@ function Header() {
             size="large"
             edge="end"
             aria-label="sair"
+            onClick={() => {handleLogout()}}
           >
-            <Logout sx={{color: "var(--roxo700)"}} onClick={() => {handleLogout()}}/>
+            <Logout sx={{color: "var(--roxo700)"}} />
           </IconButton>
         </Toolbar>
       </AppBar>
