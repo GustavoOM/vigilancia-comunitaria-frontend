@@ -92,7 +92,7 @@ function Comunidades() {
     <div style={{ paddingBottom: "56px", paddingTop: "12px" }}>
       <Header />
 
-      <div style={{ padding: "8px" }}>
+      <div>
         <TableContainer sx={{ boxShadow: "none" }} component={Paper}>
           {!comunidades ?
             <ThemeProvider theme={theme}>
