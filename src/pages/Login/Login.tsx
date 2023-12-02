@@ -1,4 +1,4 @@
-import { AlertColor, Button, Checkbox, FormControlLabel } from "@mui/material";
+import { AlertColor, Button } from "@mui/material";
 import { FormEvent, FormEventHandler, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import reactLogo from "../../assets/logo.svg";

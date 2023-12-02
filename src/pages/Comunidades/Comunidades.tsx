@@ -6,135 +6,123 @@ import { LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, Tab
 import TableToolbar from "../../components/TableToolbar/TableToolbar";
 import LinhaSolicitacaoComunidade from "../../components/LinhaSolicitacaoComunidade/LinhaSolicitacaoComunidade";
 
-type ResponseCommunityType = {
-    communityId: number,
-    communityName: string,
-}
-
 type ResponseType = {
-    participating: ResponseCommunityType[],
-    pendingInvitation: ResponseCommunityType[],
-    others: ResponseCommunityType[],
-}
-
-const response: ResponseType = {
-    participating: [
-        {
-            communityId: 1,
-            communityName: "ICMC",
-        },
-        {
-            communityId: 2,
-            communityName: "USP",
-        },
-    ],
-    pendingInvitation: [
-        {
-            communityId: 3,
-            communityName: "Unicamp",
-        },
-        {
-            communityId: 4,
-            communityName: "UFSCar",
-        },
-    ],
-    others: [
-        {
-            communityId: 5,
-            communityName: "Unesp",
-        },
-        {
-            communityId: 6,
-            communityName: "IME",
-        },
-    ]
+  approved: Comunidade[],
+  pending: Comunidade[],
+  available: Comunidade[],
 }
 
 type ComunidadesStatus = Comunidade & { status: string };
 
 function Comunidades() {
-    const [comunidades, setComunidades] = useState<ComunidadesStatus[]>([]);
+  const [comunidades, setComunidades] = useState<ComunidadesStatus[] | undefined>();
 
-    useEffect(() => {
+  useEffect(() => {
+    const getComunidades = async () => {
+      const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+      try {
+        const token = localStorage.getItem("vigilancia-token");
+        const requestConfig = {
+          method: "GET",
+          headers: {
+            Authorization: token ?? "",
+          },
+        };
+
+        setComunidades(undefined);
+
+        const requestUrl = `${apiBaseUrl}/user/communities-by-status`;
+        const response = await fetch(requestUrl, requestConfig);
+        const comunidadesData = await response.json();
+
+        console.log(comunidadesData);
+
         const comunidadesFormatadas: ComunidadesStatus[] = [];
 
-        for (const key in response) {
-            const status = (() => {
-                switch (key) {
-                    case "participating":
-                        return "Aprovado";
-                    case "pendingInvitation":
-                        return "Pendente";
-                    case "others":
-                        return "Disponível";
-                    default:
-                        return "Disponível";
-                }
-            })();
+        for (const key in comunidadesData) {
+          const status = (() => {
+            switch (key) {
+              case "approved":
+                return "Aprovado";
+              case "pending":
+                return "Pendente";
+              case "available":
+                return "Disponível";
+              default:
+                return "Disponível";
+            }
+          })();
 
-            response[key as keyof ResponseType].forEach((comunidade: ResponseCommunityType) => {
-                comunidadesFormatadas.push({
-                    id: comunidade.communityId,
-                    name: comunidade.communityName,
-                    status
-                });
+          comunidadesData[key as keyof ResponseType].forEach((comunidade: Comunidade) => {
+            comunidadesFormatadas.push({
+              id: comunidade.id,
+              name: comunidade.name,
+              status
             });
+          });
         }
 
         setComunidades(comunidadesFormatadas.sort((a, b) => {
-            if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
-                return -1;
-            }
-            if (a.name.toLocaleLowerCase() > b.name.toLocaleLowerCase()) {
-                return 1;
-            }
-            return 0;
+          if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+            return -1;
+          }
+          if (a.name.toLocaleLowerCase() > b.name.toLocaleLowerCase()) {
+            return 1;
+          }
+          return 0;
         }));
-    }, []);
 
-    const theme = createTheme({
-        palette: {
-            secondary: {
-                main: '#3C096C'
-            }
-        }
-    });
+      } catch (error) {
+        console.error(error);
+      }
+    }
 
-    return (
-        <div style={{ paddingBottom: "56px", paddingTop: "12px" }}>
-            <Header />
+    getComunidades();
+  }, []);
 
-            <div style={{ padding: "8px" }}>
-                <TableContainer sx={{ boxShadow: "none" }} component={Paper}>
-                    {!comunidades ?
-                        <ThemeProvider theme={theme}>
-                            <LinearProgress color="secondary" />
-                        </ThemeProvider> :
-                        <>
-                            <TableToolbar title="Comunidades" />
-                            <Table>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>Status</TableCell>
-                                        <TableCell>Nome</TableCell>
-                                        <TableCell align="right">Solicitar Entrada</TableCell>
-                                    </TableRow>
-                                </TableHead>
+  const theme = createTheme({
+    palette: {
+      secondary: {
+        main: '#3C096C'
+      }
+    }
+  });
 
-                                <TableBody>
-                                    {comunidades.map((comunidade) => (
-                                        <LinhaSolicitacaoComunidade key={comunidade.id} comunidade={comunidade} />
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </>
-                    }
-                </TableContainer>
-            </div>
+  return (
+    <div style={{ paddingBottom: "56px", paddingTop: "12px" }}>
+      <Header />
 
-            <Footer />
-        </div >
-    );
+      <div style={{ padding: "8px" }}>
+        <TableContainer sx={{ boxShadow: "none" }} component={Paper}>
+          {!comunidades ?
+            <ThemeProvider theme={theme}>
+              <LinearProgress color="secondary" />
+            </ThemeProvider> :
+            <>
+              <TableToolbar title="Comunidades" />
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Status</TableCell>
+                    <TableCell>Nome</TableCell>
+                    <TableCell align="right">Solicitar Entrada</TableCell>
+                  </TableRow>
+                </TableHead>
+
+                <TableBody>
+                  {comunidades.map((comunidade) => (
+                    <LinhaSolicitacaoComunidade key={comunidade.id} comunidade={comunidade} />
+                  ))}
+                </TableBody>
+              </Table>
+            </>
+          }
+        </TableContainer>
+      </div>
+
+      <Footer />
+    </div >
+  );
 }
 
 export default Comunidades;
