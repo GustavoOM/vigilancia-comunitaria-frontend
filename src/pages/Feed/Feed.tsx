@@ -1,4 +1,4 @@
-import { AlertColor, Stack } from "@mui/material";
+import { AlertColor, CircularProgress, LinearProgress, Stack, ThemeProvider, createTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
@@ -12,7 +12,9 @@ export type FeedProps = {
 function Feed(props: FeedProps) {
   const { setAlert } = props;
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+
+  const [loadingComunidades, setLoadingComunidades] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("vigilancia-token");
@@ -24,7 +26,37 @@ function Feed(props: FeedProps) {
 
   const [postagens, setPostagens] = useState([]);
 
+  const verificaComunidades = async () => {
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+
+    try {
+      const token = localStorage.getItem("vigilancia-token");
+      const requestConfig = {
+        method: "GET",
+        headers: {
+          Authorization: localStorage.getItem("vigilancia-token") ?? "",
+          "Content-Type": "application/json",
+        },
+      };
+
+      const response = await fetch(`${apiBaseUrl}/user/communities`, requestConfig);
+      const communities = await response.json();
+
+      if (communities.length === 0) {
+        navigate("/comunidades");
+      }
+    }
+    catch (error) {
+      console.log(error);
+    }
+    finally {
+      setLoadingComunidades(false);
+    }
+  }
+
   useEffect(() => {
+    verificaComunidades();
+
     fetchData();
   }, []);
 
@@ -50,43 +82,56 @@ function Feed(props: FeedProps) {
     }
   };
 
-  console.log(postagens);
+  const theme = createTheme({
+    palette: {
+      secondary: {
+        main: '#3C096C'
+      }
+    }
+  });
 
   return (
     <div style={{ paddingBottom: "56px", paddingTop: "12px" }}>
       <Header />
 
-      {postagens?.length > 0 ? (
-        <Stack justifyContent="center" alignItems="center" spacing={1}>
-          {postagens.map((postagem, index) => (
-            <Postagem
-              key={index}
-              urlImgPerfil={
-                /*postagem['urlImgPerfil'] */ "https://picsum.photos/120/120"
-              }
-              nomeUsuario={postagem["nameAuthor"]}
-              tipo={postagem["type"]}
-              nomeComunidade={postagem["nameCommunity"]}
-              descricao={postagem["content"]}
-              criadoEm={postagem["createdAt"]}
-              urlImagem={
-                postagem['images'][0]
-              }
-            />
-          ))}
-        </Stack>
-      ) : (
-        <div
-          style={{
-            minHeight: "100vh",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <h6> Não há postagens. Crie a sua!</h6>
+      {loadingComunidades ? (
+        <div style={{ padding: "8px" }}>
+          <ThemeProvider theme={theme}>
+            <LinearProgress color="secondary" />
+          </ThemeProvider>
         </div>
-      )
+      ) :
+        postagens?.length > 0 ? (
+          <Stack justifyContent="center" alignItems="center" spacing={1}>
+            {postagens.map((postagem, index) => (
+              <Postagem
+                key={index}
+                urlImgPerfil={
+                /*postagem['urlImgPerfil'] */ "https://picsum.photos/120/120"
+                }
+                nomeUsuario={postagem["nameAuthor"]}
+                tipo={postagem["type"]}
+                nomeComunidade={postagem["nameCommunity"]}
+                descricao={postagem["content"]}
+                criadoEm={postagem["createdAt"]}
+                urlImagem={
+                  postagem['images'][0]
+                }
+              />
+            ))}
+          </Stack>
+        ) : (
+          <div
+            style={{
+              minHeight: "100vh",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <h6> Não há postagens. Crie a sua!</h6>
+          </div>
+        )
       }
 
       <Footer />

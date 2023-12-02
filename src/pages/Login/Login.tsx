@@ -1,4 +1,4 @@
-import { AlertColor, Button } from "@mui/material";
+import { AlertColor, Button, CircularProgress } from "@mui/material";
 import { FormEvent, FormEventHandler, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import reactLogo from "../../assets/logo.svg";
@@ -9,6 +9,7 @@ export type LoginProps = {
 };
 
 function Login(props: LoginProps) {
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -19,11 +20,11 @@ function Login(props: LoginProps) {
   useEffect(() => {
     const token = localStorage.getItem("vigilancia-token");
     const user = localStorage.getItem("vigilancia-user");
-    
-    if(token){
+
+    if (token) {
       navigate(user === "admin" ? "/admin" : "/feed");
     }
-  },[navigate]);
+  }, [navigate]);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -57,6 +58,7 @@ function Login(props: LoginProps) {
         body: JSON.stringify(params),
       };
 
+      setLoading(true);
       const response = await fetch(`${apiBaseUrl}/auth`, requestConfig);
       const data = await response.json();
 
@@ -98,6 +100,8 @@ function Login(props: LoginProps) {
       setFormData({ email: "", senha: "", lembrar: false });
 
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -175,8 +179,10 @@ function Login(props: LoginProps) {
             font: "500 17px Roboto",
           }}
           type="submit"
+          disabled={loading}
         >
-          Entrar
+          {loading ? <CircularProgress sx={{ color: "var(--roxo100)" }} size={16} /> :
+            "Entrar"}
         </Button>
       </form>
 

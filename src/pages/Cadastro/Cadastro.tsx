@@ -3,7 +3,7 @@ import { FormEvent, FormEventHandler, useEffect, useState } from "react";
 import reactLogo from "../../assets/logo.svg";
 import Input from "../../components/Input/Input";
 
-import { AlertColor, Button } from "@mui/material";
+import { AlertColor, Button, CircularProgress } from "@mui/material";
 
 import { useNavigate } from "react-router-dom";
 
@@ -17,14 +17,16 @@ type CadastroProps = {
 function Cadastro(props: CadastroProps) {
   const navigate = useNavigate();
 
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     const token = localStorage.getItem("vigilancia-token");
     const user = localStorage.getItem("vigilancia-user");
-    
-    if(token){
+
+    if (token) {
       navigate(user === "admin" ? "/admin" : "/feed");
     }
-  },[navigate]);
+  }, [navigate]);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -53,6 +55,8 @@ function Cadastro(props: CadastroProps) {
         body: JSON.stringify(formData),
       };
 
+      setLoading(true);
+
       const response = await fetch(`${apiBaseUrl}/auth/signup`, requestConfig);
       const data = await response.json();
 
@@ -80,6 +84,8 @@ function Cadastro(props: CadastroProps) {
       setFormData({ name: "", email: "", password: "" });
 
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -154,8 +160,11 @@ function Cadastro(props: CadastroProps) {
             font: "500 17px Roboto",
           }}
           type="submit"
+          disabled={loading}
         >
-          Cadastrar
+          {loading ? <CircularProgress sx={{ color: "var(--roxo100)" }} size={16} /> :
+            "Cadastrar"
+          }
         </Button>
       </form>
 
