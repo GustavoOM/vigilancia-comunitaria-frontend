@@ -4,11 +4,12 @@ import { useNavigate } from "react-router-dom";
 
 import AdminUsuarios from "../../components/AdminUsuarios/AdminUsuarios";
 import AdminComunidades from "../../components/AdminComunidades/AdminComunidades";
+import AdminConvites from "../../components/AdminConvites/AdminConvites";
 
 import logo from "../../assets/logoWhite.svg";
 
 import { AlertColor, Button, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
-import { Groups, Logout, Person } from "@mui/icons-material";
+import { Groups, Logout, Person, Mail } from "@mui/icons-material";
 
 const drawerWidth = 218;
 
@@ -27,6 +28,11 @@ const tabs = [
     nome: "Comunidades",
     icone: <Groups sx={{ color: "white" }} />,
     componente: (key: string, setAlert: SetAlertType) => <AdminComunidades key={key} setAlert={setAlert} />
+  },
+  {
+    nome: "Convites",
+    icone: <Mail sx={{ color: "white" }} />,
+    componente: (key: string, setAlert: SetAlertType) => <AdminConvites key={key} setAlert={setAlert} />
   }
 ];
 

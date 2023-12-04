@@ -8,3 +8,11 @@ export type Usuario = {
   name: string;
   permission: string;
 }
+
+export type Convite = {
+  communityId: number;
+  communityName: string;
+  userName: string;
+  userEmail: string;
+  status: string;
+}
