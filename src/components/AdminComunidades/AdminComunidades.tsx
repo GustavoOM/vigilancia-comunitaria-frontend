@@ -26,10 +26,13 @@ function AdminComunidades(props: AdminComunidadesProps) {
       setComunidades(undefined);
 
       const requestUrl = `${apiBaseUrl}/community`;
+      
       const response = await fetch(requestUrl, requestConfig);
-      const comunidadesData = await response.json();
-
-      setComunidades(comunidadesData);
+      
+      if (response.status === 200) {
+        const comunidadesData = await response.json();
+        setComunidades(comunidadesData);
+      }
     } catch (error) {
       console.error(error);
     }

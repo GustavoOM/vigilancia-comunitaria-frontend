@@ -12,7 +12,7 @@ function AdminConvites(props: AdminConviteProps) {
 
   const [convites, setConvites] = useState<Convite[]>();
 
-  const handleAprovarOuNegar = async(convite:Convite, situacao:Boolean) => {
+  const handleAprovarOuNegar = async(convite:Convite, situacao: boolean) => {
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL
     const sendData = {
       accept: situacao,
@@ -38,6 +38,8 @@ function AdminConvites(props: AdminConviteProps) {
       setConvites(convites);
 
       if (response.ok) {
+        setConvites(prev => prev?.filter(c =>
+          c.userEmail !== convite.userEmail || c.communityId !== convite.communityId));
         if(situacao){
           props.setAlert({
             message: "Aprovado com sucesso!",
@@ -112,7 +114,7 @@ function AdminConvites(props: AdminConviteProps) {
     }
 
     getConvites();
-  }, [convites]);
+  }, []);
 
   const theme = createTheme({
     palette: {
